@@ -89,8 +89,8 @@
   }
 
   const copyChannelMention = () => {
-    channelMentionInput.select();
-    document.execCommand('Copy');
+    navigator.clipboard.writeText(channelMentionInput.value)
+      .catch(console.error);
   }
 
   channelUrlInput.addEventListener('input', convertUrlToMention);
@@ -101,6 +101,7 @@
       if (!channelUrlRegexp.test(text)) return;
 
       channelUrlInput.value = text;
+
       navigator.clipboard.writeText(convertUrlToMention())
         .catch(console.error);
     })
