@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sawarabi+Gothic" />
+
+  <meta name="robots" content="noindex" />
+
+  <style>
+    * { font-family: "Sawarabi Gothic"; }
+
+    .container {
+      max-width: 540px;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+
+  <title>チャンネルメンション生成器</title>
+</head>
+<body class="bg-dark text-white">
+  <header class="navbar navbar-expand-sm bg-warning">
+    <div class="container-fluid">
+      <p class="my-0">
+        <a class="navbar-brand" href="./index.html">チャンネルURL ➡ メンション</a>
+      </p>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="mt-5">
+      <label class="h4" for="channelUrlInput">チャンネルURL</label>
+      <input type="text" id="channelUrlInput" class="form-control" />
+      <p>URLを入力すると、チャンネルメンションが生成されます</p>
+    </div>
+
+    <div class="mt-5">
+      <label class="h4" for="channelMentionInput">チャンネルメンション</label>
+      <div class="input-group">
+        <input type="text" id="channelMentionInput" class="form-control" readonly />
+        <button type="button" id="copyChannelMentionButton" class="btn btn-warning">コピー</button>
+      </div>
+    </div>
+
+    <div class="mt-5">
+      <p>※クリップボードにチャンネルURLがある場合、自動的に生成されたチャンネルメンションがクリップボードに登録されます。</p>
+    </div>
+
+    <div class="mt-5 text-center">
+      <button type="button" class="btn btn-warning" onclick="window.close();">閉じる</button>
+    </div>
+  </div>
+
+  <footer class="footer mt-5 py-4 bg-secondary">
+    <p class="m-0 text-center">
+      &copy; 2022 <a class="text-white" href="https://twitter.com/_GrapeColor" target="_blank">GrapeColor</a>
+    </p>
+  </footer>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+  const channelUrlRegexp = /^https?:\/\/(\w+?\.)?discord\.com\/channels\/\d+\/(\d+)/;
+
+  const channelUrlInput = document.getElementById('channelUrlInput');
+  const channelMentionInput = document.getElementById('channelMentionInput');
+
+  const copyChannelMentionButton = document.getElementById('copyChannelMentionButton');
+
+  const convertUrlToMention = () => {
+    const text = channelUrlInput.value;
+    const match = text.match(channelUrlRegexp);
+
+    if (!match) return;
+
+    const mention = `<#${match[2]}>`;
+    channelMentionInput.value = mention;
+
+    return mention;
+  }
+
+  const copyChannelMention = () => {
+    channelMentionInput.select();
+    document.execCommand('Copy');
+  }
+
+  channelUrlInput.addEventListener('input', convertUrlToMention);
+  copyChannelMentionButton.addEventListener('click', copyChannelMention);
+
+  navigator.clipboard.readText()
+    .then((text) => {
+      if (!channelUrlRegexp.test(text)) return;
+
+      channelUrlInput.value = text;
+      navigator.clipboard.writeText(convertUrlToMention())
+        .catch(console.error);
+    })
+    .catch(console.error);
+</script>
+</html>
