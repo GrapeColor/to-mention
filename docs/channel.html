@@ -14,13 +14,7 @@
     * { font-family: "Sawarabi Gothic"; }
 
     .container {
-      max-width: 540px;
-    }
-
-    footer {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
+      max-width: 720px;
     }
   </style>
 
@@ -51,7 +45,7 @@
     </div>
 
     <div class="mt-5">
-      <p>※クリップボードにチャンネルリンクがある場合、自動的に生成されたチャンネルメンションがクリップボードに登録されます。</p>
+      <p>※このページを開く際にクリップボードにチャンネルリンクがある場合、自動的に生成されたチャンネルメンションがクリップボードに登録されます。</p>
     </div>
 
     <div class="mt-5 text-center">
@@ -59,8 +53,8 @@
     </div>
   </div>
 
-  <footer class="footer mt-5 py-4 bg-secondary">
-    <p class="m-0 text-center">
+  <footer>
+    <p class="mt-5 text-center">
       &copy; 2022 <a class="text-white" href="https://twitter.com/_GrapeColor" target="_blank">GrapeColor</a>
     </p>
   </footer>
@@ -69,23 +63,17 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
 
 <script type="text/javascript">
-  const channelUrlRegexp = /^https?:\/\/(\w+?\.)?discord\.com\/channels\/\d+\/(\d+)/;
+  const channelUrlRegexp = /^https?:\/\/(\w+?\.)?discord\.com\/channels\/\d{17,20}\/(\d{17,20})/;
 
   const channelUrlInput = document.getElementById('channelUrlInput');
   const channelMentionInput = document.getElementById('channelMentionInput');
-
   const copyChannelMentionButton = document.getElementById('copyChannelMentionButton');
 
   const convertUrlToMention = () => {
     const text = channelUrlInput.value;
     const match = text.match(channelUrlRegexp);
 
-    if (!match) return;
-
-    const mention = `<#${match[2]}>`;
-    channelMentionInput.value = mention;
-
-    return mention;
+    channelMentionInput.value = match ? `<#${match[2]}>` : '';
   }
 
   const copyChannelMention = () => {
@@ -102,8 +90,8 @@
 
       channelUrlInput.value = text;
 
-      navigator.clipboard.writeText(convertUrlToMention())
-        .catch(console.error);
+      convertUrlToMention();
+      copyChannelMention();
     })
     .catch(console.error);
 </script>
